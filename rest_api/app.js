@@ -8,6 +8,11 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var suppliersRouter = require('./routes/suppliers');
 
+/* REFERENCIA AL MÓDULO */
+const swaggerUi = require('swagger-ui-express')
+/* REFERENCIA AL ARCHIVO GENERADO */
+const swaggerFile = require('./swagger_output.json')
+
 var app = express();
 
 // view engine setup
@@ -23,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/suppliers', suppliersRouter);
+app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -7,8 +7,8 @@ const Suppliers = require('../models').suppliers;
 router.get('/findAll', function(req, res, next) {
     Suppliers.findAll({  
     })  
-    .then(suppliers => {  
-        res.json(suppliers);  
+    .then(data => {  
+        res.json(data);  
     })  
     .catch(error => res.status(400).send(error)) 
 });
@@ -30,7 +30,7 @@ router.get('/findById/:id', function(req, res, next) {
 });
 
 router.post('/save', function(req, res, next) { 
-    let {SupplierName, ContactName, Address, City, PostalCode, Country, Phone} = req.body;
+  let {SupplierName, ContactName, Address, City, PostalCode, Country, Phone} = req.body;
         
     Suppliers.create({
         SupplierName: SupplierName, 
@@ -39,35 +39,36 @@ router.post('/save', function(req, res, next) {
         City: City, 
         PostalCode: PostalCode, 
         Country: Country, 
-        Phone: Phone
+        Phone: Phone,
     })
     .then(data => {  
       res.json(data);  
   })  
-  .catch(error => res.status(400).send(error))
+  .catch(error => res.status(400).send(error)) 
 });
 
 router.put('/update/:id', function(req, res, next) { 
-    let {SupplierName, ContactName, Address, City, PostalCode, Country, Phone} = req.body;
-      
-    Suppliers.update({
-        SupplierName: SupplierName,
-        ContactName: ContactName,
-        Address: Address,
-        City: City,
-        PostalCode: PostalCode,
-        Country: Country, 
-        Phone: Phone
-  },
-  {
-      where: {
-        id: parseInt(id)
-      }
+  let id = parseInt(req.params.id);
+  let {SupplierName, ContactName, Address, City, PostalCode, Country, Phone} = req.body;
+
+  Suppliers.update({
+    SupplierName: SupplierName, 
+    ContactName: ContactName, 
+    Address: Address, 
+    City: City, 
+    PostalCode: PostalCode, 
+    Country: Country, 
+    Phone: Phone,
+    logins: 0,
+    last_login: 0
+  }, {
+    where: { 
+      [Op.and]: [{ SupplierID: id }]
+    }
   })
-  .then(suppliers => {  
-    res.json(suppliers);  
-})  
-.catch(error => res.status(400).send(error)) 
+  .then(data => {  
+    res.json(data);  
+})
 });  
 
 router.delete('/delete/:id', function(req, res, next) { 
@@ -75,11 +76,11 @@ router.delete('/delete/:id', function(req, res, next) {
       
     Suppliers.destroy({
     where: { 
-      id: id
+      [Op.and]: [{ SupplierID: id }]
     }
   })
-  .then(suppliers => {  
-  res.json(suppliers);  
+  .then(data => {  
+  res.json(data);  
 })  
 .catch(error => res.status(400).send(error)) 
 });
